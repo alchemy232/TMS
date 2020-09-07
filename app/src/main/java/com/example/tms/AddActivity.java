@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -25,11 +27,14 @@ public class AddActivity extends Activity {
     private EditText etDate, etGamenum, etPoints, etNumofplayers, etFio, etCorp;
     private Context context;
     private long MyMatchID;
+    ArrayList<Fio> fio;
+    DataBase mDBConnector;
+
     String[] corp = {"Ecoline", "Terractor", "United Nations Mars Initiative", "Mining Guild", "Science", "Saturn Corp"};
-    String[] fio = {"Алексей", "Наталия", "Алиса", "Азия", "Шип", "Тархун"};
+//    String[] fio = {"Алексей", "Наталия", "Алиса", "Азия", "Шип", "Тархун"};
 
     private void updateLabel() {
-        String myFormat = "YYYY-MM-DD"; //In which you need put here
+        String myFormat = "YYYY-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         etDate.setText(sdf.format(myCalendar.getTime()));
@@ -37,6 +42,8 @@ public class AddActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final Context context=this;
+        mDBConnector=new DataBase(this);
+        fio = mDBConnector.selectAllFio();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
 
@@ -63,6 +70,7 @@ public class AddActivity extends Activity {
         etNumofplayers=(EditText)findViewById(R.id.etNumofplayers);
 //        etFio=(EditText)findViewById(R.id.etFio);
         final Spinner etFio = findViewById(R.id.spinnerFIO);
+
 //        etCorp=(EditText)findViewById(R.id.etCorp);
         final Spinner etCorp=findViewById(R.id.spinner);
         btSave=(Button)findViewById(R.id.butSave);
@@ -72,7 +80,7 @@ public class AddActivity extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etCorp.setAdapter(adapter);
 
-        ArrayAdapter<String> adapterFio = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, fio);
+        ArrayAdapter<Fio> adapterFio = new ArrayAdapter<Fio>(this, android.R.layout.simple_spinner_item, fio);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etFio.setAdapter(adapterFio);
 
@@ -114,11 +122,16 @@ public class AddActivity extends Activity {
             public void onClick(View v) {
 //                Games games=new Games(MyMatchID,etTeamHome.getText().toString(),etTeamGuest.getText().toString(),Integer.parseInt(etGoalsHome.getText().toString()),Integer.parseInt(etGoalsGuest.getText().toString()));
 //                Games games=new Games(MyMatchID,etDate.getText().toString(),Integer.parseInt(etGamenum.getText().toString()),Integer.parseInt(etPoints.getText().toString()),Integer.parseInt(etNumofplayers.getText().toString()),etFio.getText().toString(),etCorp.getText().toString() );
-                Games games=new Games(MyMatchID,etDate.getText().toString(),Integer.parseInt(etGamenum.getText().toString()),Integer.parseInt(etPoints.getText().toString()),Integer.parseInt(etNumofplayers.getText().toString()),etFio.getSelectedItem().toString(),etCorp.getSelectedItem().toString());
-                Intent intent=getIntent();
-                intent.putExtra("Matches",games);
-                setResult(RESULT_OK,intent);
-                finish();
+                if (TextUtils.isEmpty(etPoints.getText().toString())){
+                    Toast.makeText(context, "Fill the points!",
+                    Toast.LENGTH_SHORT).show();
+                }else {
+                    Games games = new Games(MyMatchID, etDate.getText().toString(), Integer.parseInt(etGamenum.getText().toString()), Integer.parseInt(etPoints.getText().toString()), Integer.parseInt(etNumofplayers.getText().toString()), etFio.getSelectedItem().toString(), etCorp.getSelectedItem().toString());
+                    Intent intent = getIntent();
+                    intent.putExtra("Matches", games);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         });
 

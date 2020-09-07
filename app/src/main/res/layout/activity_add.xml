@@ -127,7 +127,7 @@
                         android:id="@+id/etNumofplayers"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text" />
+                        android:inputType="number" />
 
                 </LinearLayout>
             </LinearLayout>

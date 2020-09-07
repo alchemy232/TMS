@@ -18,4 +18,5 @@ public class Fio implements Serializable {
     public String getFio (){
         return fio;
     }
+    public String toString() {return fio;}
 }

@@ -166,7 +166,7 @@ public class Players extends AppCompatActivity {
 
 
             Fio fio = arrayFio.get(position);
-            vPos.setText(""+ position+1);
+            vPos.setText(""+ (position+1));
 //            Log.d("Alchemy","оно : " + position);
             vFio.setText(fio.getFio());
 //            Log.d("Alchemy","Players " + fio.getFio()); // не доходит до вызова этого метода
