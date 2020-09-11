@@ -3,6 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
+    <item
+        android:id="@+id/changeActivity"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="@string/players" />
+    <item
+        android:id="@+id/graphActivity"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="@string/graphs" />
     <item android:id="@+id/add"
         android:title="@string/add"
         android:icon="@android:drawable/ic_menu_add"/>
@@ -13,8 +21,5 @@
 
     <item android:id="@+id/exit"
         android:title="@string/exit"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"/>
-    <item android:id="@+id/changeActivity"
-        android:title="Players/games"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"/>
 </menu>

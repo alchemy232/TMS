@@ -19,10 +19,15 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+//import org.achartengine.GraphicalView; //импорт внешней библиотеки графиков
+
+//import org.achartengine.GraphicalView;
+
 import java.util.ArrayList;
 
 
 public class Players extends AppCompatActivity {
+//    private GraphicalView mChart; // создать новую активность (попробовать по свайпу) и запихнуть туда графику.
     Context pContext;
     DataBase mDBConnector;
     ListView mListView;
@@ -40,6 +45,7 @@ public class Players extends AppCompatActivity {
         myAdapter=new myListAdapter(pContext,mDBConnector.selectAllFio()); // переписать метод selectAll на таблицу ФИО
         mListView.setAdapter(myAdapter);
         registerForContextMenu(mListView);
+        Log.d("Alchemy"," пашет");
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,6 +76,11 @@ public class Players extends AppCompatActivity {
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.graphActivity:
+//                Intent intent = new Intent(mContext, Players.class);
+                Intent intentGraph = new Intent(this, Graph.class);
+                startActivity(intentGraph);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -86,13 +97,13 @@ public class Players extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.edit:
                 Intent i = new Intent(pContext, AddFio.class); //сменить класс активности на редактирование players
-                Games games = mDBConnector.select(info.id);
-                i.putExtra("Matches", games);
+                Fio fio = mDBConnector.selectFio(info.id);
+                i.putExtra("Matches", fio);
                 startActivityForResult(i, UPDATE_ACTIVITY);
                 updateList();
                 return true;
             case R.id.delete:
-                mDBConnector.delete(info.id);
+                mDBConnector.deleteFio(info.id);
                 updateList();
                 return true;
             default:
@@ -157,7 +168,7 @@ public class Players extends AppCompatActivity {
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            Log.d("Alchemy","GetView пашет");
+//            Log.d("Alchemy","GetView пашет");
             if (convertView == null)
                 convertView = mLayoutInflater.inflate(R.layout.itemfio, null); // To create itemfio.xml textView Fio !!
 

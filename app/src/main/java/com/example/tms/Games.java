@@ -3,6 +3,7 @@ package com.example.tms;
 import java.io.Serializable;
 
 public class Games implements Serializable {
+    public static Integer[] possiblePlayers = new Integer [] {2,3,4,5};
     private long id;
     private String date;
     private int gameNum;

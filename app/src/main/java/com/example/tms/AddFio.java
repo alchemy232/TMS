@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,7 +24,7 @@ public class AddFio extends Activity {
     private Button btSave,btCancel;
     private EditText etFio;
     private Context context;
-    private long MyMatchID;
+    private long elemID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,20 +41,25 @@ public class AddFio extends Activity {
             etFio.setText(fio.getFio());
 //            etFio.setText(games.getFio());
 //            etCorp.setText(games.getCorp());
-            MyMatchID=fio.getId();
+            elemID=fio.getId();
         }
         else
         {
-            MyMatchID=-1;
+            elemID=-1;
         }
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fio fio=new Fio(MyMatchID,etFio.getText().toString());
-                Intent intent=getIntent();
-                intent.putExtra("Matches",fio);
-                setResult(RESULT_OK,intent);
-                finish();
+                if (TextUtils.isEmpty(etFio.getText().toString()) ){
+                    Toast.makeText(context, "Заполните поле ФИО !",
+                            Toast.LENGTH_SHORT).show();
+                }else {
+                    Fio fio = new Fio(elemID, etFio.getText().toString());
+                    Intent intent = getIntent();
+                    intent.putExtra("Matches", fio);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         });
 

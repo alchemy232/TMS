@@ -52,15 +52,12 @@ public class MainActivity extends AppCompatActivity {
         myAdapter=new myListAdapter(mContext,mDBConnector.selectAll());
         mListView.setAdapter(myAdapter);
         registerForContextMenu(mListView);
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_main, menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
         return true;
     }
 
@@ -69,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.add:
                 Intent i = new Intent(mContext, AddActivity.class);
-//                Toast toast = Toast.makeText(getApplicationContext(),
-//                        "Пора покормить кота!", Toast.LENGTH_SHORT);
-//                toast.show();
                 startActivityForResult (i, ADD_ACTIVITY);
                 updateList();
                 return true;
@@ -83,8 +77,13 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.changeActivity:
+//                Intent intent = new Intent(mContext, Players.class);
                 Intent intent = new Intent(mContext, Players.class);
                 startActivity(intent);
+                return true;
+            case R.id.graphActivity:
+                Intent intentGraph = new Intent(mContext, Graph.class);
+                startActivity(intentGraph);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -104,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch(item.getItemId()) {
             case R.id.edit:
+                Log.d("Alchemy","onContextItemSelected" +  info + " - " + info.id);
                 Intent i = new Intent(mContext, AddActivity.class);
                 Games games = mDBConnector.select(info.id);
                 i.putExtra("Matches", games);
@@ -118,8 +118,15 @@ public class MainActivity extends AppCompatActivity {
                 return super.onContextItemSelected(item);
         }
     }
-    private void updateList () {
-        myAdapter.setArrayMyData(mDBConnector.selectAll());
+    Runnable runnable = new Runnable() {
+        public void run() {
+            myAdapter.setArrayMyData(mDBConnector.selectAll());
+        }
+    };
+            private void updateList () {
+                Thread thread = new Thread(runnable);
+                thread.start();
+//        myAdapter.setArrayMyData(mDBConnector.selectAll());
         myAdapter.notifyDataSetChanged();
     }
 
@@ -190,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
             vNumofplayers.setText(""+ games.getNumOfPlayers());
             vFIO.setText(games.getFio());
             vCorp.setText(games.getCorp());
-            Log.d("Alchemy","mainactivity" + games.getCorp());
+//            Log.d("Alchemy","mainactivity" + games.getCorp());
             return convertView;
         }
     } // end myAdapter

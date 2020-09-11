@@ -1,17 +1,27 @@
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
-    <LinearLayout
+<TableLayout
+    android:id="@+id/tablelayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="96dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingLeft="5dp">-->
+    <TableRow
+        android:id="@+id/tableRow"
         android:layout_width="match_parent"
-        android:layout_height="96dp"
-        android:orientation="horizontal"
-        android:paddingLeft="5dp">
-
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        >
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:text="Дата"
+            android:text="@string/date"
             android:textColor="#677566"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -19,30 +29,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=":"
+            android:text="@string/divider"
             android:textColor="#677566"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
-            android:text="номер партии"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#677566"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=":"
-            android:textColor="#677566"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:text="Очки"
-            android:layout_width="wrap_content"
+            android:text="@string/gameNum"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:textColor="#677566"
             android:textSize="20sp"
@@ -51,14 +45,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=":"
+            android:text="@string/divider"
             android:textColor="#677566"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
-            android:text="кол-во игроков"
-            android:layout_width="wrap_content"
+            android:text="@string/points"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:textColor="#677566"
             android:textSize="20sp"
@@ -67,14 +61,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=":"
+            android:text="@string/divider"
             android:textColor="#677566"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
-            android:text="ФИО"
-            android:layout_width="wrap_content"
+            android:text="@string/plyersNum"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:textColor="#677566"
             android:textSize="20sp"
@@ -83,19 +77,36 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=":"
+            android:text="@string/divider"
             android:textColor="#677566"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
-            android:text="Корпорация"
-            android:layout_width="wrap_content"
+            android:text="@string/fio"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:textColor="#677566"
             android:textSize="20sp"
             android:textStyle="bold" />
-    </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/divider"
+            android:textColor="#677566"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:text="@string/corp"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:textColor="#677566"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </TableRow>
+</TableLayout>
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, SimpleDBActivity!</string>
-    <string name="app_name">SimpleDB</string>
-    <string name="title">Чемпионат мира по футболу</string>
-    <string name="teamhomefield">Команда хозяев</string>
-    <string name="teamguestfield">Команда гостей</string>
-    <string name="goalshomefield">Голы хозяев</string>
-    <string name="goalsguestfield">Голы гостей</string>
+    <string name="hello">Hello!</string>
+    <string name="app_name">Teraforming Mars Statistics</string>
     <string name="save">Сохранить</string>
     <string name="edit">Редактировать</string>
     <string name="delete">Удалить</string>
@@ -15,4 +10,17 @@
     <string name="deleteAll">Удалить все</string>
     <string name="exit">Выход</string>
     <string name="add">Добавить</string>
+    <string name="updateCorp">Обновить корпорации</string>
+    <string name="updateFio">Обновить ФИО</string>
+    <string name="date">Дата</string>
+    <string name="gameNum">№ партии</string>
+    <string name="points">Очки</string>
+    <string name="plyersNum">Кол-во игроков</string>
+    <string name="fio">ФИО</string>
+    <string name="corp">Корпорация</string>
+    <string name="toMain">На главную</string>
+    <string name="players">Игроки / Игры</string>
+    <string name="graphs">Графики</string>
+    <string name="divider">:</string>
+
 </resources>

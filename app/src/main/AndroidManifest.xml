@@ -22,6 +22,8 @@
         </activity>
         <activity android:name=".AddFio">
         </activity>
+        <activity android:name=".Graph">
+        </activity>
     </application>
 
 </manifest>
