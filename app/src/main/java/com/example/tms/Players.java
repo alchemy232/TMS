@@ -16,18 +16,11 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-//import org.achartengine.GraphicalView; //импорт внешней библиотеки графиков
-
-//import org.achartengine.GraphicalView;
-
 import java.util.ArrayList;
 
 
 public class Players extends AppCompatActivity {
-//    private GraphicalView mChart; // создать новую активность (попробовать по свайпу) и запихнуть туда графику.
     Context pContext;
     DataBase mDBConnector;
     ListView mListView;
@@ -47,15 +40,13 @@ public class Players extends AppCompatActivity {
         registerForContextMenu(mListView);
         Log.d("Alchemy"," пашет");
     }
+    // создаем меню
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_main, menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
+    // описываем функционал меню
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -63,7 +54,6 @@ public class Players extends AppCompatActivity {
                 Intent i = new Intent(pContext, AddFio.class);
                 startActivityForResult (i, ADD_ACTIVITY);
                 updateList();
-//                Log.d("Alchemy", "Обновление таблицы игроков на листвью активити");
                 return true;
             case R.id.deleteAll:
                 mDBConnector.deleteAllFio();
@@ -77,7 +67,6 @@ public class Players extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.graphActivity:
-//                Intent intent = new Intent(mContext, Players.class);
                 Intent intentGraph = new Intent(this, Graph.class);
                 startActivity(intentGraph);
                 return true;
@@ -85,12 +74,14 @@ public class Players extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    // создаем меню долгого нажатия
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.context_menu, menu);
     }
+    // описываем функуионал меню долгого нажатия
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
@@ -110,10 +101,19 @@ public class Players extends AppCompatActivity {
                 return super.onContextItemSelected(item);
         }
     }
+    // вытаскиваем в отдельный поток обновление списка игр
+    Runnable runnable = new Runnable() {
+        public void run() {
+            myAdapter.setArrayMyData(mDBConnector.selectAllFio());
+        }
+    };
+    // обновляем список
     private void updateList () {
-        myAdapter.setArrayMyData(mDBConnector.selectAllFio());
+        Thread thread = new Thread(runnable);
+        thread.start();
         myAdapter.notifyDataSetChanged();
     }
+    // при возвращении интента в зависимости от метки или обновляем список на players или добавляем данные в БД
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -122,17 +122,15 @@ public class Players extends AppCompatActivity {
             Fio fio = (Fio) data.getExtras().getSerializable("Matches");
             if (requestCode == UPDATE_ACTIVITY) {
                 mDBConnector.updateFio(fio);
-//                Log.d("Alchemy", "if " + requestCode); // не понятно когда срабатывает
             }
             else {
                 mDBConnector.insertFIO(fio.getFio());
-//                Log.d("Alchemy", "else " + requestCode);
             }
             updateList();
 
         }
     }
-    //разобрать этот класс
+    // создаем новый класс - адаптер для формарования списка list на activity_main
     class myListAdapter extends BaseAdapter {
         private LayoutInflater mLayoutInflater;
         private ArrayList<Fio> arrayFio;
@@ -168,9 +166,8 @@ public class Players extends AppCompatActivity {
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-//            Log.d("Alchemy","GetView пашет");
             if (convertView == null)
-                convertView = mLayoutInflater.inflate(R.layout.itemfio, null); // To create itemfio.xml textView Fio !!
+                convertView = mLayoutInflater.inflate(R.layout.itemfio, null);
 
             TextView vFio= (TextView)convertView.findViewById(R.id.itemfiotextview);
             TextView vPos= (TextView)convertView.findViewById(R.id.numitem);
@@ -178,9 +175,7 @@ public class Players extends AppCompatActivity {
 
             Fio fio = arrayFio.get(position);
             vPos.setText(""+ (position+1));
-//            Log.d("Alchemy","оно : " + position);
             vFio.setText(fio.getFio());
-//            Log.d("Alchemy","Players " + fio.getFio()); // не доходит до вызова этого метода
             return convertView;
         }
     }

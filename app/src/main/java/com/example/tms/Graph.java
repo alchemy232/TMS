@@ -33,9 +33,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
+// реализуем класс работы с внешней библиотекой MPAndroidChart
 public class Graph extends AppCompatActivity {
-    int mCounter; //для проверки многопоточности
     private Button btCorpUpdate,btFioUpdate;
     Context mContext;
     DataBase mDBConnector;
@@ -44,12 +43,12 @@ public class Graph extends AppCompatActivity {
     private EditText etDateFrom,etDateTo;
 
     private void updateLabelDateFrom() {
-        String myFormat = "YYYY-MM-dd"; //In which you need put here
+        String myFormat = "YYYY-MM-dd"; // формат выбран для реализации запроса к БД с оператором between
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         etDateFrom.setText(sdf.format(myCalendar.getTime()));
     }
     private void updateLabelDateTo() {
-        String myFormat = "YYYY-MM-dd"; //In which you need put here
+        String myFormat = "YYYY-MM-dd";  // формат выбран для реализации запроса к БД с оператором between
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         etDateTo.setText(sdf.format(myCalendar.getTime()));
     }
@@ -61,18 +60,14 @@ public class Graph extends AppCompatActivity {
         setContentView(R.layout.graph);
         btCorpUpdate=(Button)findViewById(R.id.corporationsUpdate);
         btFioUpdate=(Button)findViewById(R.id.fioUpdate);
-
         etDateFrom=(EditText)findViewById(R.id.editTextDateFrom);
         etDateTo=(EditText)findViewById(R.id.editTextDateTo);
-
         mDBConnector=new DataBase(this);
-
-
+        // проверяем заполненность дат и добавляем данные в график запросами из БД + выносим в отдельный поток зам запрос к БД
         btCorpUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                ///// пилим пногопоточность
                 if (TextUtils.isEmpty(etDateFrom.getText().toString()) || TextUtils.isEmpty(etDateTo.getText().toString()) ){
                     Toast.makeText(mContext, "Заполните все поля !",
                             Toast.LENGTH_SHORT).show();
@@ -80,22 +75,19 @@ public class Graph extends AppCompatActivity {
                 final BarChart chart = (BarChart) findViewById(R.id.chart);
                 Runnable runnable = new Runnable() {
                     public void run() {
-
-
                         List<BarEntry> corpsBar = new ArrayList<BarEntry>();
-
+                        // заполяем объектами(с координатами x,y)  массив для работы с графиком
                         for (int i = 0; i < Corporations.corp.length; i++) {
                             corpsBar.add(new BarEntry(i, mDBConnector.selectCorpMaxPoints(Corporations.corp[i], etDateFrom.getText().toString(), etDateTo.getText().toString())));
                         }
-
-
+                        // создаем объект графика с данными и меткой
                         BarDataSet setComp1 = new BarDataSet(corpsBar, "Corporations");
+                        // привязываем к левому краю и устанавливаем цвета столбцов
                         setComp1.setAxisDependency(YAxis.AxisDependency.LEFT);
                         setComp1.setColors(ColorTemplate.COLORFUL_COLORS);
-
                         List<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
                         dataSets.add(setComp1);
-
+                        // переустанавливаем значения на оси x  своими наименованиями с шагом 1
                         ValueFormatter formatter = new ValueFormatter() {
                             @Override
                             public String getFormattedValue(float value) {
@@ -113,12 +105,13 @@ public class Graph extends AppCompatActivity {
                         chart.setData(data);
                     }
                 };
+                //поток вормирования графика
                 Thread thread = new Thread(runnable);
                 thread.start();
+                //отрисовываем график
                 chart.animateY(2000);
                 chart.invalidate(); // refresh
 
-                ///// пилим пногопоточность
             }
             }
         });
@@ -224,11 +217,7 @@ public class Graph extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_main, menu);
         getMenuInflater().inflate(R.menu.menu_graph, menu);
-
         return true;
     }
 

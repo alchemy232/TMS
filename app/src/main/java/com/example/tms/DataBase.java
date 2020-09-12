@@ -11,27 +11,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
+// класс создания и работы с базой данных
 public class DataBase {
     private static final String DATABASE_NAME = "TMS.db";
     private static final int DATABASE_VERSION = 1;
+    // описываем наименование столбцов в бд
     private static final String TABLE_NAMES = "NAMES";
     private static final String TABLE_CORP = "Corporations";
     private static final String TABLE_GAMES = "GAMES";
-
     private static final String COLUMN_ID = "id";
-    //columns of NAMES table
     private static final String COLUMN_FIO = "FIO";
-    //columns of Corporations table
     private static final String COLUMN_CORP = "Corp";
-    //columns of GAMES table
-
     private static final String COLUMN_DATE = "Date";
     private static final String COLUMN_GAMENUM = "GameNum";
     private static final String COLUMN_NUMOFPLAYERS = "NumOfPlayers";
     private static final String COLUMN_POINTS = "POINTS";
-
-    private static final int NUM_COLUMN_ID = 0;
 
     private SQLiteDatabase mDataBase;
 
@@ -39,7 +33,6 @@ public class DataBase {
         OpenHelper mOpenHelper = new OpenHelper(context);
         mDataBase = mOpenHelper.getWritableDatabase();
     }
-
 
     public long insertFIO(String fio) {
         ContentValues cv=new ContentValues();
@@ -119,7 +112,6 @@ public int update(Games games) {
     }
     public int selectCorpMaxPoints(String str, String dateFrom, String dateTo)  {
         int counter=0;
-        Log.d("Alchemy","Поток SelectAll " + counter++);
         Cursor mCursor = mDataBase.query(TABLE_GAMES, new String[]{"MAX("+COLUMN_POINTS+")"}, COLUMN_CORP + " = ? AND "+COLUMN_DATE+" BETWEEN ? AND ?", new String[]{String.valueOf(str), dateFrom,dateTo}, null, null, null);
         mCursor.moveToFirst();
         int max = mCursor.getInt(0);
@@ -185,7 +177,7 @@ public int update(Games games) {
         mCursor.moveToFirst();
         if (!mCursor.isAfterLast()) {
             do {
-                long id = mCursor.getLong(NUM_COLUMN_ID);
+                long id = mCursor.getLong(mCursor.getColumnIndexOrThrow(COLUMN_ID));
                 String fio = mCursor.getString(mCursor.getColumnIndexOrThrow(COLUMN_FIO));
                 arr.add(new Fio(id,fio));
             } while (mCursor.moveToNext());
@@ -213,8 +205,6 @@ public int update(Games games) {
             String queryGames = "CREATE TABLE " + TABLE_GAMES + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_DATE+" TEXT, " +
-//                    "FOREIGN KEY (" + COLUMN_FIOID + ") REFERENCES "+ TABLE_NAMES + "(" + COLUMN_ID + ")," +
-//                    COLUMN_CORPID+" TEXT, " +
                     COLUMN_GAMENUM+" INTEGER, " +
                     COLUMN_POINTS +" INTEGER, " +
                     COLUMN_NUMOFPLAYERS +" INTEGER, " +

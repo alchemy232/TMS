@@ -35,17 +35,15 @@ public class MainActivity extends AppCompatActivity {
     DataBase mDBConnector;
     Context mContext;
     ListView mListView;
-//    SimpleCursorAdapter scAdapter;
-//    Cursor cursor;
     myListAdapter myAdapter;
 
     int ADD_ACTIVITY = 0;
     int UPDATE_ACTIVITY = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mContext=this;
         mDBConnector=new DataBase(this);
         mListView=(ListView)findViewById(R.id.list);
@@ -53,14 +51,13 @@ public class MainActivity extends AppCompatActivity {
         mListView.setAdapter(myAdapter);
         registerForContextMenu(mListView);
     }
-
+// создаем меню menu_main.xml
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         return true;
     }
-
+// описываем функционал меню
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -77,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.changeActivity:
-//                Intent intent = new Intent(mContext, Players.class);
                 Intent intent = new Intent(mContext, Players.class);
                 startActivity(intent);
                 return true;
@@ -89,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
+// создаем меню по долгому нажатию
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -97,13 +93,12 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.context_menu, menu);
 
     }
-
+// описываем функционал меню по долгому нажатию
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch(item.getItemId()) {
             case R.id.edit:
-                Log.d("Alchemy","onContextItemSelected" +  info + " - " + info.id);
                 Intent i = new Intent(mContext, AddActivity.class);
                 Games games = mDBConnector.select(info.id);
                 i.putExtra("Matches", games);
@@ -118,18 +113,19 @@ public class MainActivity extends AppCompatActivity {
                 return super.onContextItemSelected(item);
         }
     }
+    // вытаскиваем в отдельный поток обновление списка игр
     Runnable runnable = new Runnable() {
         public void run() {
             myAdapter.setArrayMyData(mDBConnector.selectAll());
         }
     };
+    // обновляем список
             private void updateList () {
                 Thread thread = new Thread(runnable);
                 thread.start();
-//        myAdapter.setArrayMyData(mDBConnector.selectAll());
         myAdapter.notifyDataSetChanged();
     }
-
+// при возвращении интента в зависимости от метки или обновляем список на майнактивити или добавляем данные в БД
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -143,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             updateList();
         }
     }
-
+// создаем новый класс - адаптер для формарования списка list на activity_main
     class myListAdapter extends BaseAdapter {
         private LayoutInflater mLayoutInflater;
         private ArrayList<Games> arrayMyMatches;
@@ -197,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
             vNumofplayers.setText(""+ games.getNumOfPlayers());
             vFIO.setText(games.getFio());
             vCorp.setText(games.getCorp());
-//            Log.d("Alchemy","mainactivity" + games.getCorp());
             return convertView;
         }
     } // end myAdapter

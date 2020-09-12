@@ -6,9 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -27,14 +25,13 @@ public class AddActivity extends Activity {
     private DatePickerDialog.OnDateSetListener mDatePicker;
     final Calendar myCalendar = Calendar.getInstance();
     private Button btSave,btCancel;
-    private EditText etDate, etGamenum, etPoints; // etNumofplayers;
-    private Context context;
+    private EditText etDate, etGamenum, etPoints;
     private long elemID;
     private Spinner etFio, etCorp,etNumofplayers;
     ArrayList<Fio> fio;
     DataBase mDBConnector;
 
-
+//работаем с установкой даты в etDate
     private void updateLabel() {
         String myFormat = "YYYY-MM-dd"; //формат выбран для работоспособности оператора between в запросе бд sqlite
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -47,7 +44,6 @@ public class AddActivity extends Activity {
         fio = mDBConnector.selectAllFio();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
-        List possibleNumberOfPlayers = Arrays.asList(Games.possiblePlayers);
 
         mDatePicker=new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -69,25 +65,25 @@ public class AddActivity extends Activity {
 
         etGamenum=(EditText)findViewById(R.id.etGameNum);
         etPoints=(EditText)findViewById(R.id.etPoints);
-//        etNumofplayers=(EditText)findViewById(R.id.etNumofplayers);
         etNumofplayers=findViewById(R.id.etNumofplayers);
         etFio = findViewById(R.id.spinnerFIO);
         etCorp=findViewById(R.id.spinner);
         btSave=(Button)findViewById(R.id.butSave);
         btCancel=(Button)findViewById(R.id.butCancel);
-
+// адаптер для поля etCorp, массив берем из класса Corporations
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, Corporations.corp);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etCorp.setAdapter(adapter);
-
+// адаптер для поля etFio, массив заполняем запросом из базы данных
         ArrayAdapter<Fio> adapterFio = new ArrayAdapter<Fio>(this, android.R.layout.simple_spinner_item, fio);
         adapterFio.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etFio.setAdapter(adapterFio);
-
+// адаптер для поля etNumofplayers, массив берем из класса Games
         ArrayAdapter<Integer> numberOfPlayers = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, Games.possiblePlayers);
         numberOfPlayers.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etNumofplayers.setAdapter(numberOfPlayers);
 
+        // заполняем текущую активити данными полученными при выборе объекта из списка list на activity_main
         if(getIntent().hasExtra("Matches")){
             Games games=(Games) getIntent().getSerializableExtra("Matches");
             etDate.setText(games.getDate());
@@ -99,6 +95,7 @@ public class AddActivity extends Activity {
         {
             elemID=-1;
         }
+        // проверяем на заполненность все поля и отправляем интент назад на главное активити с объектом Games
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
